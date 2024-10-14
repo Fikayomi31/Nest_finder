@@ -1,7 +1,9 @@
 import random
 from django.shortcuts import render
+
 from userauths.models import User, Profile
 from api import serializer as api_serializer
+from api import models as api_models
 
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework import generics, status
@@ -66,3 +68,25 @@ class PasswordchangeAPIView(generics.CreateAPIView):
             return Response({"message": "User Does Not Exists"}, status=status.HTTP_404_NOT_FOUND)
         
         
+class CategoryListAPIView(generics.ListAPIView):
+    queryset = api_models.Category.objects.all()
+    serializer_class = api_serializer.CategorySerializer
+    permission_classes = [AllowAny]
+
+    def get_object(self):
+        slug = self.kwargs['slug']
+        property = api_models.objects.get(slug=slug, property_statu='Available')
+        
+        return property
+
+
+class PropertyListAPIView(generics.ListAPIView):
+    queryset = api_models.Property.objects.all()
+    serializer_class = api_serializer.PropertySerializer
+    permission_classes = [AllowAny]
+
+    def get_object(self):
+        slug = self.kwargs['slug']
+        property = api_models.objects.get(slug=slug, property_statu='Available')
+        
+        return property

@@ -1,7 +1,11 @@
-from rest_framework import serializers
-from userauths.models import Profile, User
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth.password_validation import validate_password
+
+from userauths.models import Profile, User
+from api import models as api_model
+
+from rest_framework import serializers
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -51,3 +55,69 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = '__all__'
+
+class CategorySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        fields = '__all__'
+        model = api_model.Category
+
+class AgentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        fields = '__all__'
+        model = api_model.Agent
+
+class ReviewSerializer(serializers.ModelSerializer):
+    profile = ProfileSerializer(many=True)
+
+    class Meta:
+        fields = ['user', 'property', 'rating', 'review_text', 'reply', 'profile']
+        model = api_model.Review
+
+class PropertySerializer(serializers.ModelSerializer):
+    tenant = UserSerializer(many=True)
+    review = ReviewSerializer(many=True)
+
+    class Meta:
+        fields = '__all__'
+        model = api_model.Property
+
+
+class PropertyImageSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        fields = '__all__'
+        model = api_model.PropertyImage
+
+
+class BookingSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        fields = '__all__'
+        model = api_model.Booking
+
+
+class MessageSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        fields = '__all__'
+        model = api_model.Message
+
+
+class SavedSearchSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = '__all__'
+        model = api_model.SavedSearch
+
+
+class TransactionSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = '__all__'
+        model = api_model.Transaction
+
+
+class NotificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = '__all__'
+        model = api_model.Notification
